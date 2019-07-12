@@ -1,30 +1,119 @@
 
 version: 2.1
 
-jobs:
-  build:
+# before_install template
+before_install: &before_install
+  - run:
+      name: Before Install
+      command: |
+        set -e
+        # Check short-circuit conditions
+        if [[ "${TESTING}" != "docs" && "${TESTING}" != "doctest" ]]
+        then
+          if [[ "$CIRCLE_PR_NUMBER" == "" ]]
+          then
+            echo "Not a PR, doing full build."
+          else
+            # Pull requests are slightly complicated because $TRAVIS_COMMIT_RANGE
+            # may include more changes than desired if the history is convoluted.
+            # Instead, explicitly fetch the base branch and compare against the
+            # merge-base commit.
+            git fetch -q origin +refs/heads/$CIRCLE_BRANCH
+            changes=$(git diff --name-only HEAD $(git merge-base HEAD FETCH_HEAD))
+            echo "Files changed:"
+            echo "$changes"
+            if ! echo "$changes" | grep -qvE '(\.rst$)|(^Doc)|(^Misc)'
+            then
+              echo "Only docs were updated, stopping build process."
+              exit
+            fi
+          fi
+        fi
+
+# install template
+install: &install
+  - run:
+      name: Install
+      command: |
+        echo "${OPENSSL}"
+        # Install OpenSSL as necessary
+        # Note: doctest needs OpenSSL
+        if [[ "${TESTING}" != "docs" ]]
+        then
+          # clang complains about unused-parameter a lot, redirect stderr
+          python3 Tools/ssl/multissltests.py --steps=library \
+              --base-directory ${HOME}/multissl \
+              --openssl ${OPENSSL} >/dev/null 2>&1
+        fi
+        openssl version
+        
+# before_script template
+before_script: &before_script
+  - run:
+      name: Before Script
+      command: |
+        # -Og is much faster than -O0
+        CFLAGS="${CFLAGS} -Og" ./configure --with-pydebug
+        make -j4 regen-all
+        changes=`git status --porcelain`
+        # Check for changes in regenerated files
+        if ! test -z "$changes"
+        then
+          echo "Generated files not up to date"
+          echo "$changes"
+          exit 1
+        fi
+        make -j4
+        make pythoninfo
+        
+# script template
+script: &script
+  - run:
+      name: Script
+      command: |
+        # Using the built Python as patchcheck.py is built around the idea of using
+        # a checkout-build of CPython to know things like what base branch the changes
+        # should be compared against.
+        # Only run on Linux as the check only needs to be run once.
+        if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./python Tools/scripts/patchcheck.py --travis $TRAVIS_PULL_REQUEST; fi
+        # Check that all symbols exported by libpython start with "Py" or "_Py"
+        make smelly
+        # `-r -w` implicitly provided through `make buildbottest`.            
+        if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+          XVFB_RUN=xvfb-run;
+        fi
+        $XVFB_RUN make buildbottest TESTOPTS="-j4 -uall,-cpu"
+        
+# interpolated variables template
+set_variables: &set_variables
+  - run:
+      name: Set Interpolated Variables
+      command: |
+        echo 'export OPENSSL_DIR='"$HOME/multissl/openssl/${OPENSSL}" >> $BASH_ENV
+        echo 'export PATH="${OPENSSL_DIR}/bin:$PATH"' >> $BASH_ENV
+        echo 'export CFLAGS="-I${OPENSSL_DIR}/include"' >> $BASH_ENV
+        echo 'export LDFLAGS="-L${OPENSSL_DIR}/lib"' >> $BASH_ENV
+        # Set rpath with env var instead of -Wl,-rpath linker flag
+        # OpenSSL ignores LDFLAGS when linking bin/openssl
+        echo 'export LD_RUN_PATH="${OPENSSL_DIR}/lib"' >> $BASH_ENV
+        if [[ "$CIRCLE_PR_NUMBER" == "" ]]; then
+          echo 'export TRAVIS_PULL_REQUEST="false"' >> $BASH_ENV
+        else
+          echo 'export TRAVIS_PULL_REQUEST='"${CIRCLE_PR_NUMBER}" >> $BASH_ENV
+        fi
+
+jobs:      
+  cpython-tests:
     environment:
       OPENSSL: 1.1.1c
       TRAVIS_OS_NAME: linux
     docker:
       - image: buildpack-deps:xenial
     steps:
-      - run:
-          name: Set Interpolated Environment Variables
-          command: |
-            echo 'export OPENSSL_DIR='"$HOME/multissl/openssl/${OPENSSL}" >> $BASH_ENV
-            echo 'export PATH='"${OPENSSL_DIR}/bin:$PATH" >> $BASH_ENV
-            echo 'export CFLAGS='"-I${OPENSSL_DIR}/include" >> $BASH_ENV
-            echo 'export LDFLAGS='"-L${OPENSSL_DIR}/lib" >> $BASH_ENV
-            # Set rpath with env var instead of -Wl,-rpath linker flag
-            # OpenSSL ignores LDFLAGS when linking bin/openssl
-            echo 'export LD_RUN_PATH='"${OPENSSL_DIR}/lib" >> $BASH_ENV
-            if [[ "$CIRCLE_PR_NUMBER" == "" ]]; then
-              echo 'export TRAVIS_PULL_REQUEST="false"' >> $BASH_ENV
-            else
-              echo 'export TRAVIS_PULL_REQUEST='"${CIRCLE_PR_NUMBER}" >> $BASH_ENV
-            fi
-      - run: apt-get update && apt-get install -y python3 gdb xvfb
+      - <<: *set_variables
+      - run: 
+          name: Installing APT Packages
+          command: apt-get update && apt-get install -y python3 gdb xvfb
       - checkout
       - run:
           name: echo vars
@@ -34,74 +123,80 @@ jobs:
             echo "$CIRCLE_PR_NUMBER"
             ls -a
             pwd
-      - run:
-          name: Before Install
-          command: |
-            set -e
-            # Check short-circuit conditions
-            if [[ "${TESTING}" != "docs" && "${TESTING}" != "doctest" ]]
-            then
-              if [[ "$CIRCLE_PR_NUMBER" == "" ]]
-              then
-                echo "Not a PR, doing full build."
-              else
-                # Pull requests are slightly complicated because $TRAVIS_COMMIT_RANGE
-                # may include more changes than desired if the history is convoluted.
-                # Instead, explicitly fetch the base branch and compare against the
-                # merge-base commit.
-                git fetch -q origin +refs/heads/$CIRCLE_BRANCH
-                changes=$(git diff --name-only HEAD $(git merge-base HEAD FETCH_HEAD))
-                echo "Files changed:"
-                echo "$changes"
-                if ! echo "$changes" | grep -qvE '(\.rst$)|(^Doc)|(^Misc)'
-                then
-                  echo "Only docs were updated, stopping build process."
-                  exit
-                fi
-              fi
-            fi
-      - run:
-          name: Install
-          command: |
-            echo "${OPENSSL}"
-            # Install OpenSSL as necessary
-            # Note: doctest needs OpenSSL
-            if [[ "${TESTING}" != "docs" ]]
-            then
-              # clang complains about unused-parameter a lot, redirect stderr
-              python3 Tools/ssl/multissltests.py --steps=library \
-                  --base-directory ${HOME}/multissl \
-                  --openssl ${OPENSSL} >/dev/null 2>&1
-            fi
-            openssl version
+      - <<: *before_install
+      - <<: *install
+      - <<: *before_script
+      - <<: *script      
+      
+  documentation-build:
+    environment:
+      OPENSSL: 1.1.1c
+      TRAVIS_OS_NAME: linux
+      TESTING: docs
+    docker:
+      - image: buildpack-deps:xenial
+    steps:
+      - <<: *set_variables
+      - run: 
+          name: Installing APT Packages
+          command: apt-get update && apt-get install -y python3.6 gdb xvfb
+      - <<: *before_install
+      - <<: *install
       - run:
           name: Before Script
           command: |
-            # -Og is much faster than -O0
-            CFLAGS="${CFLAGS} -Og" ./configure --with-pydebug
-            make -j4 regen-all
-            changes=`git status --porcelain`
-            # Check for changes in regenerated files
-            if ! test -z "$changes"
-            then
-              echo "Generated files not up to date"
-              echo "$changes"
-              exit 1
-            fi
-            make -j4
-            make pythoninfo
+            cd Doc
+            # Sphinx is pinned so that new versions that introduce new warnings won't suddenly cause build failures.
+            # (Updating the version is fine as long as no warnings are raised by doing so.)
+            # The theme used by the docs is stored separately, so we need to install that as well.
+            python -m pip install sphinx==2.0.1 blurb python-docs-theme
       - run:
-          name: Script
-          command: |
-            # Using the built Python as patchcheck.py is built around the idea of using
-            # a checkout-build of CPython to know things like what base branch the changes
-            # should be compared against.
-            # Only run on Linux as the check only needs to be run once.
-            if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./python Tools/scripts/patchcheck.py --travis $TRAVIS_PULL_REQUEST; fi
-            # Check that all symbols exported by libpython start with "Py" or "_Py"
-            make smelly
-            # `-r -w` implicitly provided through `make buildbottest`.            
-            if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-              XVFB_RUN=xvfb-run;
-            fi
-            $XVFB_RUN make buildbottest TESTOPTS="-j4 -uall,-cpu"
+          name: Before Script
+          command: make check suspicious html SPHINXOPTS="-q -W -j4"
+
+  documentation-tests:
+    environment:
+      OPENSSL: 1.1.1c
+      TRAVIS_OS_NAME: linux
+    docker:
+      - image: buildpack-deps:xenial
+    steps:
+      - run: echo hello      
+  
+  mac-os-tests:
+    environment:
+      OPENSSL: 1.1.1c
+      TRAVIS_OS_NAME: linux
+    docker:
+      - image: buildpack-deps:xenial
+    steps:
+      - run: echo hello      
+  
+  test-code-coverage-python:
+    environment:
+      OPENSSL: 1.1.1c
+      TRAVIS_OS_NAME: linux
+    docker:
+      - image: buildpack-deps:xenial
+    steps:
+      - run: echo hello
+  
+  test-code-coverage-C:
+    environment:
+      OPENSSL: 1.1.1c
+      TRAVIS_OS_NAME: linux
+    docker:
+      - image: buildpack-deps:xenial
+    steps:
+      - run: echo hello           
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:   
+      - cpython-tests
+      - documentation-build
+      - documentation-tests
+      - cpython-tests
+      - test-code-coverage-python
+      - test-code-coverage-C
