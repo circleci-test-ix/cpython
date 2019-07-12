@@ -3,8 +3,10 @@ version: 2.1
 
 jobs:
   build:
+    environment:
+      OPENSSL: 1.1.1c
     docker:
-      - image: buildpack-deps:xenial-scm
+      - image: buildpack-deps:xenial
     steps:
       - checkout
       - run:
