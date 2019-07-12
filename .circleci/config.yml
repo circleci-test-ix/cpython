@@ -21,7 +21,7 @@ jobs:
             # Check short-circuit conditions
             if [[ "${TESTING}" != "docs" && "${TESTING}" != "doctest" ]]
             then
-              if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]
+              if [[ "$CIRCLE_PR_NUMBER" == "" ]]
               then
                 echo "Not a PR, doing full build."
               else
@@ -52,4 +52,10 @@ jobs:
                   --base-directory ${HOME}/multissl \
                   --openssl ${OPENSSL} >/dev/null 2>&1
             fi
-            
+            openssl version
+      - run:
+          name: Before Script
+          command: echo before script
+      - run:
+          name: Script
+          command: echo script        
