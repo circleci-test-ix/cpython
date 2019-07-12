@@ -138,6 +138,7 @@ jobs:
             apt-get update
             apt install -y software-properties-common
             add-apt-repository -y ppa:deadsnakes/ppa
+            apt-get update
             apt-get install -y gdb xvfb python3.6
       - checkout
       - <<: *before_install
