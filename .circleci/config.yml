@@ -19,6 +19,11 @@ jobs:
             # Set rpath with env var instead of -Wl,-rpath linker flag
             # OpenSSL ignores LDFLAGS when linking bin/openssl
             echo 'export LD_RUN_PATH='"${OPENSSL_DIR}/lib" >> $BASH_ENV
+            if [[ "$CIRCLE_PR_NUMBER" == "" ]]; then
+              echo 'export TRAVIS_PULL_REQUEST="false"' >> $BASH_ENV
+            else
+              echo 'export TRAVIS_PULL_REQUEST='"${CIRCLE_PR_NUMBER}" >> $BASH_ENV
+            fi
       - run: apt-get update && apt-get install -y python3      
 #       - run:
 #           name: if statement
@@ -37,6 +42,7 @@ jobs:
           command: |
             echo "$CIRCLE_PR_NUMBER"
             echo "$HOME"
+            echo "$CIRCLE_PR_NUMBER"
             ls -a
             pwd
 #       - run:
