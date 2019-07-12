@@ -23,14 +23,15 @@ jobs:
 #       - run:
 #           name: if statement
 #           command: |
-#             if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./python Tools/scripts/patchcheck.py --travis $TRAVIS_PULL_REQUEST; fi
-      - run:
-          name: if statement
-          command: |
-            if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-              XVFB_RUN=xvfb-run;
-            fi
+#             if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+#               XVFB_RUN=xvfb-run;
+#             fi
       - checkout
+#       - run:
+#           name: if statement
+#           command: |
+#             ./python Tools/scripts/patchcheck.py --travis $TRAVIS_PULL_REQUEST
+      
       - run:
           name: echo vars
           command: |
@@ -104,9 +105,9 @@ jobs:
             # a checkout-build of CPython to know things like what base branch the changes
             # should be compared against.
             # Only run on Linux as the check only needs to be run once.
-            - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./python Tools/scripts/patchcheck.py --travis $TRAVIS_PULL_REQUEST; fi
+            if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./python Tools/scripts/patchcheck.py --travis $TRAVIS_PULL_REQUEST; fi
             # Check that all symbols exported by libpython start with "Py" or "_Py"
-            - make smelly
+            make smelly
             # `-r -w` implicitly provided through `make buildbottest`.            
             if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
               XVFB_RUN=xvfb-run;
