@@ -134,11 +134,12 @@ jobs:
       - <<: *set_variables
       - run: 
           name: Installing APT Packages
-          command: |
+          command: |            
             apt-get update
+            apt-get install -y gdb xvfb
             apt install -y software-properties-common
-            add-apt-repository ppa:deadsnakes/ppaapt-get            
-            apt-get install -y python3.6 gdb xvfb
+            add-apt-repository ppa:deadsnakes/ppaapt-get                        
+            apt install python3.6
       - checkout
       - <<: *before_install
       - <<: *install
