@@ -6,7 +6,7 @@ jobs:
     environment:
       OPENSSL: 1.1.1c
     docker:
-      - image: buildpack-deps:xenial-scm
+      - image: buildpack-deps:xenial
     steps:
       - run: apt-get update && apt-get install -y python3      
       - checkout
@@ -15,12 +15,12 @@ jobs:
           command: |
             echo "$CIRCLE_PR_NUMBER"
             echo "$HOME"
-            echo ls -a
-            echo pwd
+            ls -a
+            pwd
       - run:
           name: ssl test
           command: |
-            python3 Tools/ssl/multissltests.py --steps=library --base-directory ${HOME}/multissl             
+            python3 Tools/ssl/multissltests.py --steps=library --base-directory ${HOME}/multissl --openssl ${OPENSSL}           
 #       - run:
 #           name: Before Install
 #           command: |
