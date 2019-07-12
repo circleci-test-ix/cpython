@@ -135,7 +135,8 @@ jobs:
           name: Installing APT Packages
           command: |
             add-apt-repository ppa:deadsnakes/ppaapt-get
-            apt-get update && install -y python3.6 gdb xvfb
+            apt-get update
+            apt-get install -y python3.6 gdb xvfb
       - checkout
       - <<: *before_install
       - <<: *install
@@ -161,7 +162,7 @@ jobs:
       - <<: *set_variables
       - run: 
           name: Installing APT Packages
-          command: apt-get update && install -y xvfb
+          command: apt-get update && apt-get install -y xvfb
       - checkout
       - <<: *before_install
       - <<: *install
@@ -205,7 +206,7 @@ jobs:
       - <<: *set_variables      
       - run: 
           name: Installing APT Packages
-          command: apt-get update && install -y xvfb
+          command: apt-get update && apt-get install -y xvfb
       - checkout
       - <<: *before_install
       - <<: *install
@@ -242,7 +243,7 @@ jobs:
       - <<: *set_variables      
       - run: 
           name: Installing APT Packages
-          command: apt-get update && install -y lcov xvfb
+          command: apt-get update && apt-get install -y lcov xvfb
       - checkout
       - <<: *before_install
       - <<: *install
