@@ -87,9 +87,8 @@ jobs:
             - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./python Tools/scripts/patchcheck.py --travis $TRAVIS_PULL_REQUEST; fi
             # Check that all symbols exported by libpython start with "Py" or "_Py"
             - make smelly
-            # `-r -w` implicitly provided through `make buildbottest`.
-            - |
-              if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-                XVFB_RUN=xvfb-run;
-              fi
-              $XVFB_RUN make buildbottest TESTOPTS="-j4 -uall,-cpu"
+            # `-r -w` implicitly provided through `make buildbottest`.            
+            if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+              XVFB_RUN=xvfb-run;
+            fi
+            $XVFB_RUN make buildbottest TESTOPTS="-j4 -uall,-cpu"
