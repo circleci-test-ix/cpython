@@ -8,7 +8,7 @@ jobs:
     docker:
       - image: buildpack-deps:xenial-scm
     steps:
-      - run: apt-get update && apt-get install python3
+      - run: apt-get update && apt-get install -y python3
       - run: python3
 #       - checkout
 #       - run:
