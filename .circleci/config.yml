@@ -24,19 +24,8 @@ jobs:
             else
               echo 'export TRAVIS_PULL_REQUEST='"${CIRCLE_PR_NUMBER}" >> $BASH_ENV
             fi
-      - run: apt-get update && apt-get install -y python3      
-#       - run:
-#           name: if statement
-#           command: |
-#             if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-#               XVFB_RUN=xvfb-run;
-#             fi
+      - run: apt-get update && apt-get install -y python3 gdb xvfb
       - checkout
-#       - run:
-#           name: if statement
-#           command: |
-#             ./python Tools/scripts/patchcheck.py --travis $TRAVIS_PULL_REQUEST
-      
       - run:
           name: echo vars
           command: |
@@ -45,10 +34,6 @@ jobs:
             echo "$CIRCLE_PR_NUMBER"
             ls -a
             pwd
-#       - run:
-#           name: ssl test
-#           command: |
-#             python3 Tools/ssl/multissltests.py --steps=library --base-directory ${HOME}/multissl --openssl ${OPENSSL}           
       - run:
           name: Before Install
           command: |
@@ -78,6 +63,7 @@ jobs:
       - run:
           name: Install
           command: |
+            echo "${OPENSSL}"
             # Install OpenSSL as necessary
             # Note: doctest needs OpenSSL
             if [[ "${TESTING}" != "docs" ]]
