@@ -8,56 +8,57 @@ jobs:
     docker:
       - image: buildpack-deps:xenial
     steps:
-      - checkout
-      - run:
-          name: hello
-          command: echo hello
-      - run:
-          name: echo vars
-          command: |
-            echo "$CIRCLE_PR_NUMBER"
-      - run:
-          name: Before Install
-          command: |
-            set -e
-            # Check short-circuit conditions
-            if [[ "${TESTING}" != "docs" && "${TESTING}" != "doctest" ]]
-            then
-              if [[ "$CIRCLE_PR_NUMBER" == "" ]]
-              then
-                echo "Not a PR, doing full build."
-              else
-                # Pull requests are slightly complicated because $TRAVIS_COMMIT_RANGE
-                # may include more changes than desired if the history is convoluted.
-                # Instead, explicitly fetch the base branch and compare against the
-                # merge-base commit.
-                git fetch -q origin +refs/heads/$CIRCLE_BRANCH
-                changes=$(git diff --name-only HEAD $(git merge-base HEAD FETCH_HEAD))
-                echo "Files changed:"
-                echo "$changes"
-                if ! echo "$changes" | grep -qvE '(\.rst$)|(^Doc)|(^Misc)'
-                then
-                  echo "Only docs were updated, stopping build process."
-                  exit
-                fi
-              fi
-            fi
-      - run:
-          name: Install
-          command: |
-            # Install OpenSSL as necessary
-            # Note: doctest needs OpenSSL
-            if [[ "${TESTING}" != "docs" ]]
-            then
-              # clang complains about unused-parameter a lot, redirect stderr
-              python3 Tools/ssl/multissltests.py --steps=library \
-                  --base-directory ${HOME}/multissl \
-                  --openssl ${OPENSSL} >/dev/null 2>&1
-            fi
-            openssl version
-      - run:
-          name: Before Script
-          command: echo before script
-      - run:
-          name: Script
-          command: echo script        
+      - run: python3
+#       - checkout
+#       - run:
+#           name: hello
+#           command: echo hello
+#       - run:
+#           name: echo vars
+#           command: |
+#             echo "$CIRCLE_PR_NUMBER"
+#       - run:
+#           name: Before Install
+#           command: |
+#             set -e
+#             # Check short-circuit conditions
+#             if [[ "${TESTING}" != "docs" && "${TESTING}" != "doctest" ]]
+#             then
+#               if [[ "$CIRCLE_PR_NUMBER" == "" ]]
+#               then
+#                 echo "Not a PR, doing full build."
+#               else
+#                 # Pull requests are slightly complicated because $TRAVIS_COMMIT_RANGE
+#                 # may include more changes than desired if the history is convoluted.
+#                 # Instead, explicitly fetch the base branch and compare against the
+#                 # merge-base commit.
+#                 git fetch -q origin +refs/heads/$CIRCLE_BRANCH
+#                 changes=$(git diff --name-only HEAD $(git merge-base HEAD FETCH_HEAD))
+#                 echo "Files changed:"
+#                 echo "$changes"
+#                 if ! echo "$changes" | grep -qvE '(\.rst$)|(^Doc)|(^Misc)'
+#                 then
+#                   echo "Only docs were updated, stopping build process."
+#                   exit
+#                 fi
+#               fi
+#             fi
+#       - run:
+#           name: Install
+#           command: |
+#             # Install OpenSSL as necessary
+#             # Note: doctest needs OpenSSL
+#             if [[ "${TESTING}" != "docs" ]]
+#             then
+#               # clang complains about unused-parameter a lot, redirect stderr
+#               python3 Tools/ssl/multissltests.py --steps=library \
+#                   --base-directory ${HOME}/multissl \
+#                   --openssl ${OPENSSL} >/dev/null 2>&1
+#             fi
+#             openssl version
+#       - run:
+#           name: Before Script
+#           command: echo before script
+#       - run:
+#           name: Script
+#           command: echo script        
