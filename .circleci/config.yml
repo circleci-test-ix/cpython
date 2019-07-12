@@ -5,6 +5,7 @@ jobs:
   build:
     environment:
       OPENSSL: 1.1.1c
+      TRAVIS_OS_NAME: linux
     docker:
       - image: buildpack-deps:xenial
     steps:
@@ -78,4 +79,17 @@ jobs:
             make pythoninfo
       - run:
           name: Script
-          command: echo script        
+          command: |
+            # Using the built Python as patchcheck.py is built around the idea of using
+            # a checkout-build of CPython to know things like what base branch the changes
+            # should be compared against.
+            # Only run on Linux as the check only needs to be run once.
+            - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./python Tools/scripts/patchcheck.py --travis $TRAVIS_PULL_REQUEST; fi
+            # Check that all symbols exported by libpython start with "Py" or "_Py"
+            - make smelly
+            # `-r -w` implicitly provided through `make buildbottest`.
+            - |
+              if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+                XVFB_RUN=xvfb-run;
+              fi
+              $XVFB_RUN make buildbottest TESTOPTS="-j4 -uall,-cpu"
