@@ -6,9 +6,9 @@ jobs:
     environment:
       OPENSSL: 1.1.1c
     docker:
-      - image: buildpack-deps
+      - image: buildpack-deps:xenial-scm
     steps:
-      - run: sudo apt-get update && sudo apt-get install python3
+      - run: apt-get update && apt-get install python3
       - run: python3
 #       - checkout
 #       - run:
