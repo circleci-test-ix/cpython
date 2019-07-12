@@ -1,1 +1,28 @@
 
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: buildpack-deps:xenial-scm
+    steps:
+      - checkout
+      - run:
+          name: hello
+          command: echo hello
+        
+# workflows:
+#   version: 2
+#   test:
+#     jobs:   
+#       - test
+#   nightly:
+#     triggers:
+#       - schedule:
+#           cron: "0 0 * * *"
+#           filters:
+#             branches:
+#               only:
+#                 - master
+#     jobs:
+#       - update_codeowners
