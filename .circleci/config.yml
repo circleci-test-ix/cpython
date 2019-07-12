@@ -38,6 +38,7 @@ install: &install
       name: Install
       command: |
         echo "${OPENSSL}"
+        echo "${TESTING}"
         # Install OpenSSL as necessary
         # Note: doctest needs OpenSSL
         if [[ "${TESTING}" != "docs" ]]
@@ -134,6 +135,7 @@ jobs:
       - run: 
           name: Installing APT Packages
           command: |
+            apt install software-properties-common
             add-apt-repository ppa:deadsnakes/ppaapt-get
             apt-get update
             apt-get install -y python3.6 gdb xvfb
@@ -269,6 +271,6 @@ workflows:
       - cpython-tests
       - documentation-build
       - documentation-tests
-      - cpython-tests
+      - mac-os-tests
       - test-code-coverage-python
       - test-code-coverage-C
