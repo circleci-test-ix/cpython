@@ -9,7 +9,27 @@ jobs:
     docker:
       - image: buildpack-deps:xenial
     steps:
+      - run:
+          name: Set Interpolated Environment Variables
+          command: |
+            echo 'export OPENSSL_DIR='"$HOME/multissl/openssl/${OPENSSL}" >> $BASH_ENV
+            echo 'export PATH='"${OPENSSL_DIR}/bin:$PATH" >> $BASH_ENV
+            echo 'export CFLAGS='"-I${OPENSSL_DIR}/include" >> $BASH_ENV
+            echo 'export LDFLAGS='"-L${OPENSSL_DIR}/lib" >> $BASH_ENV
+            # Set rpath with env var instead of -Wl,-rpath linker flag
+            # OpenSSL ignores LDFLAGS when linking bin/openssl
+            echo 'export LD_RUN_PATH='"${OPENSSL_DIR}/lib" >> $BASH_ENV
       - run: apt-get update && apt-get install -y python3      
+      - run:
+          name: if statement
+          command: |
+            if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./python Tools/scripts/patchcheck.py --travis $TRAVIS_PULL_REQUEST; fi
+      - run:
+          name: if statement
+          command: |
+            if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+              XVFB_RUN=xvfb-run;
+            fi
       - checkout
       - run:
           name: echo vars
