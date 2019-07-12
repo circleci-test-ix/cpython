@@ -1,6 +1,8 @@
 
 version: 2.1
 
+# Define templates to be reused across multiple jobs
+
 # before_install template
 before_install: &before_install
   - run:
@@ -115,14 +117,6 @@ jobs:
           name: Installing APT Packages
           command: apt-get update && apt-get install -y python3 gdb xvfb
       - checkout
-      - run:
-          name: echo vars
-          command: |
-            echo "$CIRCLE_PR_NUMBER"
-            echo "$HOME"
-            echo "$CIRCLE_PR_NUMBER"
-            ls -a
-            pwd
       - <<: *before_install
       - <<: *install
       - <<: *before_script
@@ -139,7 +133,10 @@ jobs:
       - <<: *set_variables
       - run: 
           name: Installing APT Packages
-          command: apt-get update && apt-get install -y python3.6 gdb xvfb
+          command: |
+            add-apt-repository ppa:deadsnakes/ppaapt-get
+            apt-get update && install -y python3.6 gdb xvfb
+      - checkout
       - <<: *before_install
       - <<: *install
       - run:
