@@ -10,13 +10,13 @@ jobs:
     steps:
       - run: apt-get update && apt-get install -y python3      
       - checkout
-       - run:
-           name: echo vars
-           command: |
-             echo "$CIRCLE_PR_NUMBER"
-             echo "$HOME"
-             echo ls -a
-             echo pwd
+      - run:
+          name: echo vars
+          command: |
+            echo "$CIRCLE_PR_NUMBER"
+            echo "$HOME"
+            echo ls -a
+            echo pwd
       - run:
           name: ssl test
           command: |
