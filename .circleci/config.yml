@@ -118,6 +118,7 @@ jobs:
           name: Installing APT Packages
           command: apt-get update && apt-get install -y python3 gdb xvfb
       - checkout
+      - echo "$CFLAGS"
       - <<: *before_install
       - <<: *install
       - <<: *before_script
