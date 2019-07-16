@@ -272,8 +272,8 @@ workflows:
   build_and_test:
     jobs:   
       - cpython-tests
-      - documentation-build
-      - documentation-tests
-      - mac-os-tests
-      - test-code-coverage-python
-      - test-code-coverage-C
+#       - documentation-build
+#       - documentation-tests
+#       - mac-os-tests
+#       - test-code-coverage-python
+#       - test-code-coverage-C
