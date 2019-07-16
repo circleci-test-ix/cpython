@@ -275,9 +275,9 @@ jobs:
 workflows:
   version: 2
   build_and_test:
-    jobs:   
+    jobs:
 #       - cpython-tests
-       - documentation-build
+      - documentation-build
 #       - documentation-tests
 #       - mac-os-tests
 #       - test-code-coverage-python
