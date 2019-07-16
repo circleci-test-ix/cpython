@@ -34,8 +34,8 @@ before_install: &before_install
 
 # install template
 install: &install
-  - restore_cache:
-      key: multissl
+#   - restore_cache:
+#       key: multissl
   - run:
       name: Install
       command: |
@@ -51,6 +51,10 @@ install: &install
               --openssl ${OPENSSL} >/dev/null 2>&1
         fi
         openssl version
+#   - save_cache:
+#       key: multissl
+#       paths:
+#         - ~/multissl
         
 # before_script template
 before_script: &before_script
