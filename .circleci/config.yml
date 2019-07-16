@@ -54,7 +54,7 @@ install: &install
   - save_cache:
       key: multissl
       paths:
-        - "${HOME}/multissl"
+        - ~/multissl
         
 # before_script template
 before_script: &before_script
