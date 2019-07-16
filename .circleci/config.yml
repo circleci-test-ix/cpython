@@ -145,7 +145,8 @@ jobs:
             apt install -y software-properties-common
             add-apt-repository -y ppa:deadsnakes/ppa
             apt-get update
-            apt-get install -y xvfb python3.6 python3-pip
+            apt-get install -y xvfb python3.6
+            curl https://bootstrap.pypa.io/get-pip.py | python3.6 - --user
       - checkout
       - <<: *before_install
       - <<: *install
