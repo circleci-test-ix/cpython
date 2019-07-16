@@ -51,10 +51,6 @@ install: &install
               --openssl ${OPENSSL} >/dev/null 2>&1
         fi
         openssl version
-  - save_cache:
-      key: multissl
-      paths:
-        - ~/multissl
         
 # before_script template
 before_script: &before_script
