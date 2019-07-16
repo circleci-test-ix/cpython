@@ -116,7 +116,7 @@ jobs:
       - <<: *set_variables
       - run: 
           name: Installing APT Packages
-          command: apt-get update && apt-get install -y python3 gdb xvfb
+          command: apt-get update && apt-get install -y python3 python3-tk gdb xvfb
       - checkout
       - run: echo "${CFLAGS}"
       - <<: *before_install
