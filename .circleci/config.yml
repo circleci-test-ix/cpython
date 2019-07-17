@@ -141,6 +141,7 @@ jobs:
       - checkout
       - <<: *before_install
       - <<: *install
+      - run: echo 'export PATH=/home/circleci/.local/bin:$PATH' >> $BASH_ENV
       - run:
           name: Before Script
           command: |
@@ -148,10 +149,10 @@ jobs:
             # Sphinx is pinned so that new versions that introduce new warnings won't suddenly cause build failures.
             # (Updating the version is fine as long as no warnings are raised by doing so.)
             # The theme used by the docs is stored separately, so we need to install that as well.
-            sudo python -m pip install sphinx==2.0.1 blurb python-docs-theme
+            python -m pip install sphinx==2.0.1 blurb python-docs-theme --user
       - run:
           name: Script
-          command: sudo make check suspicious html SPHINXOPTS="-q -W -j4"
+          command: make check suspicious html SPHINXOPTS="-q -W -j4"
 
   documentation-tests:
     environment:
