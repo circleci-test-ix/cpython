@@ -75,6 +75,8 @@ install: &install
         fi
         openssl version
         ls ${HOME}/multissl
+        ls ${HOME}/multissl/openssl
+        ls ${HOME}/multissl/src
         
 # before_script template
 before_script: &before_script
