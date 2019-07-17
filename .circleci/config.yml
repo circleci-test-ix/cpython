@@ -150,10 +150,6 @@ jobs:
             # (Updating the version is fine as long as no warnings are raised by doing so.)
             # The theme used by the docs is stored separately, so we need to install that as well.
             python -m pip install sphinx==2.0.1 blurb python-docs-theme --user
-      - run:
-          name: Script
-          command: |
-            cd Doc
             make check suspicious html SPHINXOPTS="-q -W -j4"
 
   documentation-tests:
@@ -272,8 +268,8 @@ workflows:
   build_and_test:
     jobs:
 #       - cpython-tests
-      - documentation-build
-#       - documentation-tests
+#       - documentation-build
+      - documentation-tests
 #       - mac-os-tests
 #       - test-code-coverage-python
 #       - test-code-coverage-C
