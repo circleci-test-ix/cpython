@@ -60,6 +60,7 @@ install: &install
       command: |
         echo "${OPENSSL}"
         echo "${TESTING}"
+        echo "${HOME}"
         # Install OpenSSL as necessary
         # Note: doctest needs OpenSSL
         if [[ "${TESTING}" != "docs" ]]
