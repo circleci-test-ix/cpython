@@ -14,6 +14,7 @@ install_clang: &install_clang
         apt-get update
         apt-get install -y clang
   - run:
+      name: Set compiler to clang 
       command: |
         echo 'export CC=${CC:-clang}' >> $BASH_ENV
         echo 'export CC_FOR_BUILD=${CC_FOR_BUILD:-clang}' >> $BASH_ENV
