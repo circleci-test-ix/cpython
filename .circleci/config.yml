@@ -135,18 +135,9 @@ jobs:
       TRAVIS_OS_NAME: linux
       TESTING: docs
     docker:
-      - image: buildpack-deps:xenial
+      - image: circleci/python:3.6
     steps:
       - <<: *set_variables
-      - run: 
-          name: Installing APT Packages
-          command: |            
-            apt-get update
-            apt install -y software-properties-common
-            add-apt-repository -y ppa:deadsnakes/ppa
-            apt-get update
-            apt-get install -y xvfb python3.6
-            curl https://bootstrap.pypa.io/get-pip.py | python3.6 - --user
       - checkout
       - <<: *before_install
       - <<: *install
