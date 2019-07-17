@@ -151,7 +151,7 @@ jobs:
             sudo python -m pip install sphinx==2.0.1 blurb python-docs-theme
       - run:
           name: Script
-          command: make check suspicious html SPHINXOPTS="-q -W -j4"
+          command: sudo make check suspicious html SPHINXOPTS="-q -W -j4"
 
   documentation-tests:
     environment:
