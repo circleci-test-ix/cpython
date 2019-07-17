@@ -696,6 +696,9 @@ class PosixTester(unittest.TestCase):
         self.assertRaises(TypeError, posix.makedev)
 
     def _test_all_chown_common(self, chown_func, first_param, stat_func):
+      
+        print("****** PRINT IN _test_all_chown_common *********")
+      
         """Common code for chown, fchown and lchown tests."""
         def check_stat(uid, gid):
             if stat_func is not None:
