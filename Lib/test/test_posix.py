@@ -726,7 +726,7 @@ class PosixTester(unittest.TestCase):
             # This part of the test only runs when run as root.
             # Only scary people run their tests as root.
 
-            big_value = 2**20
+            big_value = 2**10
             print("****** PRINT FIRST PARAM *********")
             print(first_param)
             print("****** PRINT BIG VALUE *********")
