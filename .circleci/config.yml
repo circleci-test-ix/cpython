@@ -22,7 +22,7 @@ save_cache: &save_cache
   - save_cache:
       key: multissl-{{ arch }}
       paths:
-        - ${HOME}/multissl
+        - ~/${HOME}/multissl
 
 # before_install template
 before_install: &before_install
