@@ -179,8 +179,7 @@ jobs:
       - save_cache:
           key: multissl
           paths:
-            - ~/multissl
-          
+            - ${HOME}/multissl          
   
   mac-os-tests:
     environment:
@@ -191,6 +190,8 @@ jobs:
     steps:
       - <<: *set_variables
       - checkout
+      - restore_cache:
+          key: multissl
       - run:
           name: Before Install
           command: |
@@ -200,6 +201,10 @@ jobs:
       - <<: *install   
       - <<: *before_script
       - <<: *script
+      - save_cache:
+          key: multissl
+          paths:
+            - ${HOME}/multissl
   
   test-code-coverage-python:
     environment:
@@ -274,7 +279,7 @@ workflows:
     jobs:
 #       - cpython-tests
 #       - documentation-build
-      - documentation-tests
-#       - mac-os-tests
+#       - documentation-tests
+      - mac-os-tests
 #       - test-code-coverage-python
 #       - test-code-coverage-C
