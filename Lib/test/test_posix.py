@@ -726,7 +726,7 @@ class PosixTester(unittest.TestCase):
             # This part of the test only runs when run as root.
             # Only scary people run their tests as root.
 
-            big_value = 2**10
+            big_value = 2**20
             chown_func(first_param, big_value, big_value)
             check_stat(big_value, big_value)
             chown_func(first_param, -1, -1)
