@@ -727,6 +727,10 @@ class PosixTester(unittest.TestCase):
             # Only scary people run their tests as root.
 
             big_value = 2**20
+            print("****** PRINT FIRST PARAM *********")
+            print(first_param)
+            print("****** PRINT BIG VALUE *********")
+            print(big_value)
             chown_func(first_param, big_value, big_value)
             check_stat(big_value, big_value)
             chown_func(first_param, -1, -1)
