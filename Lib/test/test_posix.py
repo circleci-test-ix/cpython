@@ -711,6 +711,9 @@ class PosixTester(unittest.TestCase):
         check_stat(uid, gid)
         chown_func(first_param, uid, -1)
         check_stat(uid, gid)
+        
+        print("****** PRINT UID *********")
+        print(uid)
 
         if uid == 0:
             # Try an amusingly large uid/gid to make sure we handle
