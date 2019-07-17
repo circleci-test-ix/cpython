@@ -766,13 +766,17 @@ class PosixTester(unittest.TestCase):
 
     @unittest.skipUnless(hasattr(posix, 'chown'), "test needs os.chown()")
     def test_chown(self):
+        print("***** INSIDE test_chown 1 **********")
         # raise an OSError if the file does not exist
         os.unlink(support.TESTFN)
+        print("***** INSIDE test_chown 2 **********")
         self.assertRaises(OSError, posix.chown, support.TESTFN, -1, -1)
-
+        print("***** INSIDE test_chown 3 **********")
         # re-create the file
         support.create_empty_file(support.TESTFN)
+        print("***** INSIDE test_chown 4 **********")
         self._test_all_chown_common(posix.chown, support.TESTFN, posix.stat)
+        print("***** INSIDE test_chown 5 **********")
 
     @unittest.skipUnless(hasattr(posix, 'fchown'), "test needs os.fchown()")
     def test_fchown(self):
