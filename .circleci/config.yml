@@ -34,8 +34,8 @@ before_install: &before_install
 
 # install template
 install: &install
-  - restore_cache:
-      key: multissl
+#   - restore_cache:
+#       key: multissl
   - run:
       name: Install
       command: |
@@ -165,6 +165,8 @@ jobs:
           name: Installing APT Packages
           command: apt-get update && apt-get install -y python3 tk-dev uuid-dev xvfb
       - checkout
+      - restore_cache:
+          key: multissl
       - <<: *before_install
       - <<: *install
       - run:
@@ -176,6 +178,10 @@ jobs:
             xvfb-run make -C Doc/ PYTHON=../python SPHINXOPTS="-q -W -j4" doctest
 #       - run:
 #           name: Script
+      - save_cache:
+          key: multissl
+          paths:
+            - ~/multissl
           
   
   mac-os-tests:
