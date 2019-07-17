@@ -4,7 +4,7 @@ version: 2.1
 # Define templates to be reused across multiple jobs
 
 restore_cache: &restore_cache
-  - restore_cache
+  - restore_cache:
       key: multissl-{{ arch }}
       
 save_cache: &save_cache
