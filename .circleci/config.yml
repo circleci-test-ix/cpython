@@ -12,7 +12,7 @@ install_clang: &install_clang
         wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -        
         apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main"
         apt-get update
-        apt-get install -y clang-7
+        apt-get install clang-7 clang-tools-7 clang-7-doc libclang-common-7-dev libclang-7-dev libclang1-7 clang-format-7 python-clang-7
         # Set compiler to clang 
         echo 'export CC=${CC:-clang}' >> $BASH_ENV
         echo 'export CC_FOR_BUILD=${CC_FOR_BUILD:-clang}' >> $BASH_ENV
