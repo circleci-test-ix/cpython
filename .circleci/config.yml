@@ -145,7 +145,7 @@ jobs:
       - <<: *install_clang
       - run: 
           name: Installing APT Packages
-          command: apt-get update && apt-get install -y python3 tk-dev uuid-dev gdb xvfb
+          command: apt-get update && apt-get install -y python3 tk-dev uuid-dev gdb xvfb wamerican
       - checkout
       - <<: *restore_cache
       - <<: *before_install
