@@ -217,7 +217,7 @@ jobs:
       - <<: *set_variables      
       - run: 
           name: Installing APT Packages
-          command: apt-get update && apt-get install -y python3 xvfb
+          command: apt-get update && apt-get install -y python3 tk-dev uuid-dev xvfb
       - checkout
       - <<: *before_install
       - <<: *install
@@ -280,6 +280,6 @@ workflows:
 #       - cpython-tests
 #       - documentation-build
 #       - documentation-tests
-      - mac-os-tests
-#       - test-code-coverage-python
+#       - mac-os-tests
+      - test-code-coverage-python
 #       - test-code-coverage-C
