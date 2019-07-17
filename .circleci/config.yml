@@ -34,8 +34,8 @@ before_install: &before_install
 
 # install template
 install: &install
-#   - restore_cache:
-#       key: multissl
+  - restore_cache:
+      key: multissl
   - run:
       name: Install
       command: |
@@ -163,7 +163,7 @@ jobs:
       - <<: *set_variables
       - run: 
           name: Installing APT Packages
-          command: apt-get update && apt-get install -y python3 xvfb
+          command: apt-get update && apt-get install -y python3 tk-dev uuid-dev xvfb
       - checkout
       - <<: *before_install
       - <<: *install
@@ -173,9 +173,10 @@ jobs:
             ./configure
             make -j4
             make -C Doc/ PYTHON=../python venv
-      - run:
-          name: Script
-          command: xvfb-run make -C Doc/ PYTHON=../python SPHINXOPTS="-q -W -j4" doctest
+            xvfb-run make -C Doc/ PYTHON=../python SPHINXOPTS="-q -W -j4" doctest
+#       - run:
+#           name: Script
+          
   
   mac-os-tests:
     environment:
