@@ -3,6 +3,15 @@ version: 2.1
 
 # Define templates to be reused across multiple jobs
 
+install_clang: &install_clang:
+  - run:
+      name: Install Clang
+      command: |
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial main"
+        sudo apt-get update
+        sudo apt-get install -y clang
+
 restore_cache: &restore_cache
   - restore_cache:
       key: multissl-{{ arch }}
@@ -124,6 +133,7 @@ jobs:
       - image: buildpack-deps:xenial
     steps:
       - <<: *set_variables
+      - <<: *install_clang
       - run: 
           name: Installing APT Packages
           command: apt-get update && apt-get install -y python3 tk-dev uuid-dev gdb xvfb
@@ -289,8 +299,8 @@ workflows:
   build_and_test:
     jobs:
       - cpython-tests
-      - documentation-build
-      - documentation-tests
-      - mac-os-tests
-      - test-code-coverage-python
-      - test-code-coverage-C
+#       - documentation-build
+#       - documentation-tests
+#       - mac-os-tests
+#       - test-code-coverage-python
+#       - test-code-coverage-C
