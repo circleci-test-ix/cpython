@@ -74,6 +74,7 @@ install: &install
               --openssl ${OPENSSL} >/dev/null 2>&1
         fi
         openssl version
+        ls ${HOME}/multissl
         
 # before_script template
 before_script: &before_script
