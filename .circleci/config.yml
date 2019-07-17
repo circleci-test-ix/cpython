@@ -143,7 +143,7 @@ jobs:
       - <<: *install
       - run: echo 'export PATH=/home/circleci/.local/bin:$PATH' >> $BASH_ENV
       - run:
-          name: Before Script
+          name: Script
           command: |
             cd Doc
             # Sphinx is pinned so that new versions that introduce new warnings won't suddenly cause build failures.
@@ -163,21 +163,19 @@ jobs:
       - <<: *set_variables
       - run: 
           name: Installing APT Packages
-          command: apt-get update && apt-get install -y python3 tk-dev uuid-dev xvfb
+          command: apt-get update && apt-get install -y python3 tk-dev uuid-dev xvfb wamerican
       - checkout
       - restore_cache:
           key: multissl
       - <<: *before_install
       - <<: *install
       - run:
-          name: Before Script
+          name: Script
           command: |
             ./configure
             make -j4
             make -C Doc/ PYTHON=../python venv
             xvfb-run make -C Doc/ PYTHON=../python SPHINXOPTS="-q -W -j4" doctest
-#       - run:
-#           name: Script
       - save_cache:
           key: multissl
           paths:
