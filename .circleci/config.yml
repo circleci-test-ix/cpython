@@ -10,9 +10,9 @@ install_clang: &install_clang
         apt-get update
         apt install -y software-properties-common
         wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -        
-        apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7.0 main"
+        apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main"
         apt-get update
-        apt-get install -y clang-7.0
+        apt-get install -y clang-7
         # Set compiler to clang 
         echo 'export CC=${CC:-clang}' >> $BASH_ENV
         echo 'export CC_FOR_BUILD=${CC_FOR_BUILD:-clang}' >> $BASH_ENV
