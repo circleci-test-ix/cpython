@@ -3,7 +3,7 @@ version: 2.1
 
 # Define templates to be reused across multiple jobs
 
-install_clang: &install_clang:
+install_clang: &install_clang
   - run:
       name: Install Clang
       command: |
