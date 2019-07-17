@@ -13,6 +13,10 @@ install_clang: &install_clang
         apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial main"
         apt-get update
         apt-get install -y clang
+  - run:
+      command: |
+        echo 'export CC=${CC:-clang}' >> $BASH_ENV
+        echo 'export CC_FOR_BUILD=${CC_FOR_BUILD:-clang}' >> $BASH_ENV
 
 restore_cache: &restore_cache
   - restore_cache:
