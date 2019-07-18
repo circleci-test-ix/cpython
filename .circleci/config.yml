@@ -79,9 +79,9 @@ install: &install
               --openssl ${OPENSSL} >/dev/null 2>&1
         fi
         openssl version
-        ls ${HOME}/multissl
-        ls ${HOME}/multissl/openssl
-        ls ${HOME}/multissl/src
+#        ls ${HOME}/multissl
+#        ls ${HOME}/multissl/openssl
+#        ls ${HOME}/multissl/src
         
 # before_script template
 before_script: &before_script
@@ -284,13 +284,13 @@ jobs:
     environment:      
       TRAVIS_OS_NAME: linux
       OPTIONAL: true
-    docker:
-      - image: buildpack-deps:xenial
+    machine:
+      image: ubuntu-1604:201903-01
     steps:
       - <<: *set_variables      
       - run: 
           name: Installing APT Packages
-          command: apt-get update && apt-get install -y python3 tk-dev uuid-dev lcov xvfb
+          command: sudo apt-get update && sudo apt-get install -y tk-dev uuid-dev gdb lcov xvfb
       - checkout
       - <<: *restore_cache      
       - <<: *before_install
