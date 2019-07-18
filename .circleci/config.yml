@@ -125,13 +125,18 @@ set_variables: &set_variables
   - run:
       name: Set Interpolated Variables
       command: |
-        echo 'export OPENSSL="1.1.1c" >> $BASH_ENV
+        # Since we have to interpolate a lot of these variables we have to declare them this way.
+        # Otherwise we would use the 'environment' keyword        
+        
+        echo 'export OPENSSL="1.1.1c"' >> $BASH_ENV
         echo 'export OPENSSL_DIR='"$HOME/multissl/openssl/${OPENSSL}" >> $BASH_ENV
         echo 'export PATH="${OPENSSL_DIR}/bin:$PATH"' >> $BASH_ENV
         echo 'export CFLAGS="-I${OPENSSL_DIR}/include"' >> $BASH_ENV
         echo 'export LDFLAGS="-L${OPENSSL_DIR}/lib"' >> $BASH_ENV
+        
         # Set rpath with env var instead of -Wl,-rpath linker flag
         # OpenSSL ignores LDFLAGS when linking bin/openssl
+        
         echo 'export LD_RUN_PATH="${OPENSSL_DIR}/lib"' >> $BASH_ENV
         if [[ "$CIRCLE_PR_NUMBER" == "" ]]; then
           echo 'export TRAVIS_PULL_REQUEST="false"' >> $BASH_ENV
