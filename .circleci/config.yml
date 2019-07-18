@@ -9,7 +9,7 @@ install_clang: &install_clang
       command: |
         sudo apt-get update
         sudo apt install -y software-properties-common
-        sudo wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -        
+        sudo wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -        
         sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main"
         sudo apt-get update
         sudo apt-get install -y clang-7 lldb-7 lld-7        
