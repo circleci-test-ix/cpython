@@ -696,9 +696,6 @@ class PosixTester(unittest.TestCase):
         self.assertRaises(TypeError, posix.makedev)
 
     def _test_all_chown_common(self, chown_func, first_param, stat_func):
-      
-        print("****** PRINT IN _test_all_chown_common *********")
-      
         """Common code for chown, fchown and lchown tests."""
         def check_stat(uid, gid):
             if stat_func is not None:
@@ -714,9 +711,6 @@ class PosixTester(unittest.TestCase):
         check_stat(uid, gid)
         chown_func(first_param, uid, -1)
         check_stat(uid, gid)
-        
-        print("****** PRINT UID *********")
-        print(uid)
 
         if uid == 0:
             # Try an amusingly large uid/gid to make sure we handle
@@ -733,10 +727,6 @@ class PosixTester(unittest.TestCase):
             # Only scary people run their tests as root.
 
             big_value = 2**31
-            print("****** PRINT FIRST PARAM *********")
-            print(first_param)
-            print("****** PRINT BIG VALUE *********")
-            print(big_value)
             chown_func(first_param, big_value, big_value)
             check_stat(big_value, big_value)
             chown_func(first_param, -1, -1)
@@ -766,17 +756,13 @@ class PosixTester(unittest.TestCase):
 
     @unittest.skipUnless(hasattr(posix, 'chown'), "test needs os.chown()")
     def test_chown(self):
-        print("***** INSIDE test_chown 1 **********")
         # raise an OSError if the file does not exist
         os.unlink(support.TESTFN)
-        print("***** INSIDE test_chown 2 **********")
         self.assertRaises(OSError, posix.chown, support.TESTFN, -1, -1)
-        print("***** INSIDE test_chown 3 **********")
+
         # re-create the file
         support.create_empty_file(support.TESTFN)
-        print("***** INSIDE test_chown 4 **********")
         self._test_all_chown_common(posix.chown, support.TESTFN, posix.stat)
-        print("***** INSIDE test_chown 5 **********")
 
     @unittest.skipUnless(hasattr(posix, 'fchown'), "test needs os.fchown()")
     def test_fchown(self):
