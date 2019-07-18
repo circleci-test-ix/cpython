@@ -3,6 +3,14 @@ version: 2.1
 
 # Define templates to be reused across multiple jobs
 
+branch_filters: &branch_filters
+  filters:
+    branches:
+      only: 
+        - master
+        - /^\d\.\d$/
+        - buildbot-custom
+
 install_clang: &install_clang
   - run:
       name: Install Clang
@@ -329,9 +337,15 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - cpython-tests
-      - documentation-build
-      - documentation-tests
-      - mac-os-tests
-      - test-code-coverage-python
-      - test-code-coverage-C
+      - cpython-tests:
+          <<: * branch_filters
+      - documentation-build:
+          <<: * branch_filters
+      - documentation-tests:
+          <<: * branch_filters
+      - mac-os-tests:
+          <<: * branch_filters
+      - test-code-coverage-python:
+          <<: * branch_filters
+      - test-code-coverage-C:
+          <<: * branch_filters
