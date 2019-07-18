@@ -125,6 +125,7 @@ set_variables: &set_variables
   - run:
       name: Set Interpolated Variables
       command: |
+        echo 'export OPENSSL="1.1.1c" >> $BASH_ENV
         echo 'export OPENSSL_DIR='"$HOME/multissl/openssl/${OPENSSL}" >> $BASH_ENV
         echo 'export PATH="${OPENSSL_DIR}/bin:$PATH"' >> $BASH_ENV
         echo 'export CFLAGS="-I${OPENSSL_DIR}/include"' >> $BASH_ENV
@@ -140,8 +141,7 @@ set_variables: &set_variables
 
 jobs:      
   cpython-tests:
-    environment:
-      OPENSSL: 1.1.1c
+    environment:      
       TRAVIS_OS_NAME: linux
     machine:
       image: ubuntu-1604:201903-01
@@ -161,8 +161,7 @@ jobs:
       - <<: *save_cache
       
   documentation-build:
-    environment:
-      OPENSSL: 1.1.1c
+    environment:      
       TRAVIS_OS_NAME: linux
       TESTING: docs
     docker:
@@ -191,14 +190,14 @@ jobs:
       - <<: *save_cache
 
   documentation-tests:
-    environment:
-      OPENSSL: 1.1.1c
+    environment:      
       TRAVIS_OS_NAME: linux
       TESTING: doctest
     docker:
       - image: buildpack-deps:xenial
     steps:
       - <<: *set_variables
+      - <<: *install_clang
       - run: 
           name: Installing APT Packages
           command: apt-get update && apt-get install -y python3 tk-dev uuid-dev xvfb wamerican
@@ -218,13 +217,13 @@ jobs:
       - <<: *save_cache
   
   mac-os-tests:
-    environment:
-      OPENSSL: 1.1.1c      
+    environment:        
       OPTIONAL: true
     macos:
       xcode: "10.0"
     steps:
       - <<: *set_variables
+      - <<: *install_clang
       - checkout
       - <<: *restore_cache
       - run:
@@ -239,8 +238,7 @@ jobs:
       - <<: *save_cache
   
   test-code-coverage-python:
-    environment:
-      OPENSSL: 1.1.1c
+    environment:      
       TRAVIS_OS_NAME: linux
       OPTIONAL: true
     docker:
@@ -278,8 +276,7 @@ jobs:
       - <<: *save_cache
   
   test-code-coverage-C:
-    environment:
-      OPENSSL: 1.1.1c
+    environment:      
       TRAVIS_OS_NAME: linux
       OPTIONAL: true
     docker:
@@ -314,8 +311,8 @@ workflows:
   build_and_test:
     jobs:
       - cpython-tests
-#       - documentation-build
-#       - documentation-tests
-#       - mac-os-tests
-#       - test-code-coverage-python
-#       - test-code-coverage-C
+      - documentation-build
+      - documentation-tests
+      - mac-os-tests
+      - test-code-coverage-python
+      - test-code-coverage-C
