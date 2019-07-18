@@ -143,8 +143,10 @@ jobs:
     environment:
       OPENSSL: 1.1.1c
       TRAVIS_OS_NAME: linux
-    docker:
-      - image: buildpack-deps:xenial
+#     docker:
+#       - image: buildpack-deps:xenial
+    machine:
+      - image: circleci/classic:latest
     steps:
       - <<: *set_variables
       - <<: *install_clang
