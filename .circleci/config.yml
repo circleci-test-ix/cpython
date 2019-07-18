@@ -116,9 +116,9 @@ script: &script
         make smelly
         # `-r -w` implicitly provided through `make buildbottest`.            
         if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-          XVFB_RUN=xvfb-run;
+          XVFB_RUN="xvfb-run -a";
         fi
-        $XVFB_RUN -a make buildbottest TESTOPTS="-j4 -uall,-cpu"
+        $XVFB_RUN make buildbottest TESTOPTS="-j4 -uall,-cpu"
         
 # interpolated variables template
 set_variables: &set_variables
@@ -219,7 +219,7 @@ jobs:
             make -C Doc/ PYTHON=../python venv
       - run:
           name: Run Tests
-          command: xvfb-run make -C Doc/ PYTHON=../python SPHINXOPTS="-q -W -j4" doctest
+          command: xvfb-run -a make -C Doc/ PYTHON=../python SPHINXOPTS="-q -W -j4" doctest
       - <<: *save_cache
   
   mac-os-tests:
