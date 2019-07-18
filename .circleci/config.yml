@@ -126,7 +126,7 @@ set_variables: &set_variables
       name: Set Interpolated Variables
       command: |
         echo 'export OPENSSL_DIR='"$HOME/multissl/openssl/${OPENSSL}" >> $BASH_ENV
-        echo 'export PATH="${OPENSSL_DIR}/bin:$PATH"' >> $BASH_ENV
+        echo 'export PATH="${OPENSSL_DIR}/bin:$PATH"' >> $BASH_ENV        
         echo 'export CFLAGS="-I${OPENSSL_DIR}/include"' >> $BASH_ENV
         echo 'export LDFLAGS="-L${OPENSSL_DIR}/lib"' >> $BASH_ENV
         # Set rpath with env var instead of -Wl,-rpath linker flag
@@ -153,6 +153,7 @@ jobs:
       - run: 
           name: Installing APT Packages
           command: sudo apt-get update && sudo apt-get install -y python3 tk-dev uuid-dev gdb xvfb
+      - run: python3
       - checkout
       - <<: *restore_cache
       - <<: *before_install
