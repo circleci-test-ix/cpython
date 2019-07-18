@@ -15,8 +15,8 @@ install_clang: &install_clang
   - run:
       name: Install Clang
       command: |
-        sudo apt-get update
-        sudo apt install -y software-properties-common
+        sudo apt-get update || true
+        sudo apt install -y software-properties-common || true
         sudo wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -        
         sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main"
         sudo apt-get update
