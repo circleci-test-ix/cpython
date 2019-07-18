@@ -148,9 +148,9 @@ jobs:
     steps:
       - <<: *set_variables
       - <<: *install_clang
-#       - run: 
-#           name: Installing APT Packages
-#           command: sudo apt-get update && sudo apt-get install -y python3 gdb xvfb
+      - run: 
+          name: Installing APT Packages
+          command: sudo apt-get update && sudo apt-get install -y tk-dev uuid-dev gdb xvfb
       - checkout
       - run: pyenv global 3.5.2
       - <<: *restore_cache
