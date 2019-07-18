@@ -26,7 +26,7 @@ restore_cache: &restore_cache
   - restore_cache:
       key: multissl2-{{ arch }}
       
-save_cache_linux: &save_cache
+save_cache_linux: &save_cache_linux
   - save_cache:
       key: multissl2-{{ arch }}
       paths:
