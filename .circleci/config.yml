@@ -338,14 +338,14 @@ workflows:
   build_and_test:
     jobs:
       - cpython-tests:
-          <<: * branch_filters
+          <<: *branch_filters
       - documentation-build:
-          <<: * branch_filters
+          <<: *branch_filters
       - documentation-tests:
-          <<: * branch_filters
+          <<: *branch_filters
       - mac-os-tests:
-          <<: * branch_filters
+          <<: *branch_filters
       - test-code-coverage-python:
-          <<: * branch_filters
+          <<: *branch_filters
       - test-code-coverage-C:
-          <<: * branch_filters
+          <<: *branch_filters
