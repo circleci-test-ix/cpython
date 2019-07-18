@@ -145,8 +145,8 @@ jobs:
       TRAVIS_OS_NAME: linux
     docker:
       - image: buildpack-deps:xenial
-        user: circleci
     steps:
+      - run: whoami
       - <<: *set_variables
       - <<: *install_clang
       - run: 
