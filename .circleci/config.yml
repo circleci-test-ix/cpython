@@ -24,13 +24,13 @@ install_clang: &install_clang
 
 restore_cache: &restore_cache
   - restore_cache:
-      key: multissl-{{ arch }}
+      key: multissl1-{{ arch }}
       
 save_cache: &save_cache
   - save_cache:
-      key: multissl-{{ arch }}
+      key: multissl1-{{ arch }}
       paths:
-        - /root/multissl
+        - /home/circleci/multissl
 
 # before_install template
 before_install: &before_install
@@ -128,7 +128,8 @@ set_variables: &set_variables
         # Since we have to interpolate a lot of these variables we have to declare them this way.
         # Otherwise we would use the 'environment' keyword        
         
-        echo 'export OPENSSL="1.1.1c"' >> $BASH_ENV
+        OPENSSL=1.1.1c
+        echo 'export OPENSSL='"${OPENSSL}" >> $BASH_ENV
         echo 'export OPENSSL_DIR='"$HOME/multissl/openssl/${OPENSSL}" >> $BASH_ENV
         echo 'export PATH="${OPENSSL_DIR}/bin:$PATH"' >> $BASH_ENV
         echo 'export CFLAGS="-I${OPENSSL_DIR}/include"' >> $BASH_ENV
