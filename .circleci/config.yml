@@ -15,8 +15,8 @@ install_clang: &install_clang
   - run:
       name: Install Clang
       command: |
-        sudo apt-get update || true
-        sudo apt install -y software-properties-common || true
+        sudo apt-get update
+        sudo apt install -y software-properties-common
         sudo wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -        
         sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main"
         sudo apt-get update
@@ -32,23 +32,23 @@ install_clang: &install_clang
 
 restore_cache: &restore_cache
   - restore_cache:
-      key: multissl4-{{ arch }}
+      key: multissl5-{{ arch }}
       
 save_cache_linux: &save_cache_linux
   - save_cache:
-      key: multissl4-{{ arch }}
+      key: multissl5-{{ arch }}
       paths:
         - /home/circleci/multissl
 
 save_cache_docker: &save_cache_docker
   - save_cache:
-      key: multissl4-{{ arch }}
+      key: multissl5-{{ arch }}
       paths:
         - /root/multissl
         
 save_cache_macos: &save_cache_macos
   - save_cache:
-      key: multissl4-{{ arch }}
+      key: multissl5-{{ arch }}
       paths:
         - /Users/distiller/multissl        
 
@@ -172,12 +172,12 @@ jobs:
     machine:
       image: ubuntu-1604:201903-01
     steps:
+      - checkout
       - <<: *set_variables
       - <<: *install_clang
       - run: 
           name: Installing APT Packages
-          command: sudo apt-get update && sudo apt-get install -y tk-dev uuid-dev gdb xvfb
-      - checkout
+          command: sudo apt-get update && sudo apt-get install -y tk-dev uuid-dev gdb xvfb      
       - run: pyenv global 3.5.2
       - <<: *restore_cache
       - <<: *before_install
@@ -193,8 +193,8 @@ jobs:
     docker:
       - image: circleci/python:3.6.7
     steps:
-      - <<: *set_variables
       - checkout
+      - <<: *set_variables      
       - <<: *restore_cache
       - <<: *before_install
       - <<: *install
@@ -222,12 +222,12 @@ jobs:
     machine:
       image: ubuntu-1604:201903-01
     steps:
+      - checkout
       - <<: *set_variables
       - <<: *install_clang
       - run: 
           name: Installing APT Packages
-          command: sudo apt-get update && sudo apt-get install -y tk-dev uuid-dev xvfb wamerican
-      - checkout
+          command: sudo apt-get update && sudo apt-get install -y tk-dev uuid-dev xvfb wamerican      
       - run: pyenv global 3.5.2
       - <<: *restore_cache
       - <<: *before_install
@@ -249,8 +249,8 @@ jobs:
     macos:
       xcode: "10.0"
     steps:
-      - <<: *set_variables
       - checkout
+      - <<: *set_variables      
       - <<: *restore_cache
       - run:
           name: Before Install
@@ -270,11 +270,11 @@ jobs:
     docker:
       - image: buildpack-deps:xenial
     steps:
+      - checkout
       - <<: *set_variables      
       - run: 
           name: Installing APT Packages
-          command: apt-get update && apt-get install -y python3 tk-dev uuid-dev xvfb
-      - checkout
+          command: apt-get update && apt-get install -y python3 tk-dev uuid-dev xvfb      
       - <<: *restore_cache      
       - <<: *before_install
       - <<: *install
@@ -308,11 +308,11 @@ jobs:
     machine:
       image: ubuntu-1604:201903-01
     steps:
+      - checkout
       - <<: *set_variables      
       - run: 
           name: Installing APT Packages
-          command: sudo apt-get update && sudo apt-get install -y tk-dev uuid-dev gdb lcov xvfb
-      - checkout
+          command: sudo apt-get update && sudo apt-get install -y tk-dev uuid-dev gdb lcov xvfb      
       - run: pyenv global 3.5.2
       - <<: *restore_cache      
       - <<: *before_install
