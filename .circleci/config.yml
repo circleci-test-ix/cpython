@@ -76,7 +76,7 @@ install: &install
           # clang complains about unused-parameter a lot, redirect stderr
           python3 Tools/ssl/multissltests.py --steps=library \
               --base-directory ${HOME}/multissl \
-              --openssl ${OPENSSL} >/dev/null 2>&1
+              --openssl ${OPENSSL}
         fi
         openssl version
         ls ${HOME}/multissl
@@ -146,14 +146,13 @@ jobs:
     machine:
       image: ubuntu-1604:201903-01
     steps:
-      - run: whoami
-      - run: cat /etc/passwd
       - <<: *set_variables
       - <<: *install_clang
       - run: 
           name: Installing APT Packages
-          command: sudo apt-get update && sudo apt-get install -y gdb xvfb
+          command: sudo apt-get update && sudo apt-get install -y python3 gdb xvfb
       - checkout
+      - run: pyenv global 3.5.2
       - <<: *restore_cache
       - <<: *before_install
       - <<: *install
