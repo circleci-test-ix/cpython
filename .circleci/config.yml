@@ -36,13 +36,13 @@ save_cache_docker: &save_cache_docker
   - save_cache:
       key: multissl2-{{ arch }}
       paths:
-        - /home/circleci/multissl
+        - /root/multissl
         
 save_cache_macos: &save_cache_macos
   - save_cache:
       key: multissl2-{{ arch }}
       paths:
-        - /root/multissl        
+        - /Users/distiller/multissl        
 
 # before_install template
 before_install: &before_install
