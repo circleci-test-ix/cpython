@@ -147,10 +147,7 @@ jobs:
       - image: buildpack-deps:xenial
     steps:
       - run: whoami
-      - run: 
-          name: list users
-          command: |
-            cut -d: -f1 /etc/passwd
+      - run: cat /etc/passwd
       - <<: *set_variables
       - <<: *install_clang
       - run: 
