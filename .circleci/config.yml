@@ -7,16 +7,16 @@ install_clang: &install_clang
   - run:
       name: Install Clang
       command: |
-        sudo apt-get update
-        sudo apt install -y software-properties-common
-        sudo wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -        
-        sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main"
-        sudo apt-get update
-        sudo apt-get install -y clang-7 lldb-7 lld-7        
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-7 1000
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-7 1000
-        sudo update-alternatives --config clang
-        sudo update-alternatives --config clang++
+        apt-get update
+        apt install -y software-properties-common
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -        
+        apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7 main"
+        apt-get update
+        apt-get install -y clang-7 lldb-7 lld-7        
+        update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-7 1000
+        update-alternatives --install /usr/bin/clang clang /usr/bin/clang-7 1000
+        update-alternatives --config clang
+        update-alternatives --config clang++
         # Set compiler to clang 
         echo 'export CC=${CC:-clang}' >> $BASH_ENV
         echo 'export CC_FOR_BUILD=${CC_FOR_BUILD:-clang}' >> $BASH_ENV
@@ -126,7 +126,7 @@ set_variables: &set_variables
       name: Set Interpolated Variables
       command: |
         echo 'export OPENSSL_DIR='"$HOME/multissl/openssl/${OPENSSL}" >> $BASH_ENV
-        echo 'export PATH="${OPENSSL_DIR}/bin:$PATH"' >> $BASH_ENV        
+        echo 'export PATH="${OPENSSL_DIR}/bin:$PATH"' >> $BASH_ENV
         echo 'export CFLAGS="-I${OPENSSL_DIR}/include"' >> $BASH_ENV
         echo 'export LDFLAGS="-L${OPENSSL_DIR}/lib"' >> $BASH_ENV
         # Set rpath with env var instead of -Wl,-rpath linker flag
@@ -143,17 +143,15 @@ jobs:
     environment:
       OPENSSL: 1.1.1c
       TRAVIS_OS_NAME: linux
-#     docker:
-#       - image: buildpack-deps:xenial
-    machine:
-      image: circleci/classic:latest
+    docker:
+      - image: buildpack-deps:xenial
+        user: circleci
     steps:
       - <<: *set_variables
-      # - <<: *install_clang
+      - <<: *install_clang
       - run: 
           name: Installing APT Packages
-          command: sudo apt-get update && sudo apt-get install -y python3 tk-dev uuid-dev gdb xvfb
-      - run: python3
+          command: apt-get update && apt-get install -y python3 tk-dev uuid-dev gdb xvfb
       - checkout
       - <<: *restore_cache
       - <<: *before_install
