@@ -32,23 +32,23 @@ install_clang: &install_clang
 
 restore_cache: &restore_cache
   - restore_cache:
-      key: multissl2-{{ arch }}
+      key: multissl3-{{ arch }}
       
 save_cache_linux: &save_cache_linux
   - save_cache:
-      key: multissl2-{{ arch }}
+      key: multissl3-{{ arch }}
       paths:
         - /home/circleci/multissl
 
 save_cache_docker: &save_cache_docker
   - save_cache:
-      key: multissl2-{{ arch }}
+      key: multissl3-{{ arch }}
       paths:
         - /root/multissl
         
 save_cache_macos: &save_cache_macos
   - save_cache:
-      key: multissl2-{{ arch }}
+      key: multissl3-{{ arch }}
       paths:
         - /Users/distiller/multissl        
 
