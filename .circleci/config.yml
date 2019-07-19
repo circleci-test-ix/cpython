@@ -1,6 +1,10 @@
 
 version: 2.1
 
+# orb to allow shallow checkouts to reduce checkout time
+orbs:
+  shallow-checkout: datacamp/shallow-checkout@0.0.1
+
 # Define templates to be reused across multiple jobs
 
 branch_filters: &branch_filters
