@@ -170,7 +170,7 @@ jobs:
     machine:
       image: ubuntu-1604:201903-01
     steps:
-      - checkout
+      - shallow-checkout/checkout
       - <<: *set_variables
       - <<: *install_clang
       - run: 
@@ -191,7 +191,7 @@ jobs:
     docker:
       - image: circleci/python:3.6.7
     steps:
-      - checkout
+      - shallow-checkout/checkout
       - <<: *set_variables      
       - <<: *restore_cache
       - <<: *before_install
@@ -220,7 +220,7 @@ jobs:
     machine:
       image: ubuntu-1604:201903-01
     steps:
-      - checkout
+      - shallow-checkout/checkout
       - <<: *set_variables
       - <<: *install_clang
       - run: 
@@ -247,7 +247,7 @@ jobs:
     macos:
       xcode: "10.0"
     steps:
-      - checkout
+      - shallow-checkout/checkout
       - <<: *set_variables      
       - <<: *restore_cache
       - run:
@@ -268,7 +268,7 @@ jobs:
     docker:
       - image: buildpack-deps:xenial
     steps:
-      - checkout
+      - shallow-checkout/checkout
       - <<: *set_variables      
       - run: 
           name: Installing APT Packages
@@ -306,7 +306,7 @@ jobs:
     machine:
       image: ubuntu-1604:201903-01
     steps:
-      - checkout
+      - shallow-checkout/checkout
       - <<: *set_variables      
       - run: 
           name: Installing APT Packages
